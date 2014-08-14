@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Android Swear</string>
+    <string name="action_settings">Settings</string>
+
+
+    <string name="setMinTime">Minimum Time</string>
+    <string name="setMaxTime">Maximum Time</string>
+
+    <string name="swear_negative">Swear</string>
+    <string name="swear_neutral">Neutral Statement</string>
+    <string name="swear_positive">Motivation</string>
+
+    <string name="buttonStartService">Start Service</string>
+    <string name="buttonSendMotivation">Send Test</string>
+
+    <string-array name="negative">
+        <item>bad person</item>
+        <item>horrible person</item>
+        <item>inferior person</item>
+    </string-array>
+    <string-array name="neutral">
+        <item>person</item>
+        <item>human</item>
+    </string-array>
+    <string-array name="positive">
+        <item>good person</item>
+        <item>nice person</item>
+        <item>good-looking</item>
+    </string-array>
+
+    <string name="noTypeSelected">No type selected.</string>
+
+    <string name="notificationIntro">You are a </string> <!-- This is the first part of the message -->
+
+    <string name="negativeText">This is bad.</string>
+    <string name="neutralText">I don\'t care.</string>
+    <string name="positiveText">This is good.</string>
+    <string name="emptyPoolText">No swear available: </string>
+
+    <string name="negativeSummary">Dork</string>
+    <string name="neutralSummary" >Message</string>
+    <string name="positiveSummary">Keep Smiling</string>
+    <string name="emptyPoolSummary">Don\'t use it like that.</string>
+
+</resources>
