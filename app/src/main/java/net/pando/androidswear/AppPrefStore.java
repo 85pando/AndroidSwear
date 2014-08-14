@@ -23,7 +23,7 @@ public class AppPrefStore {
     }
 
     public boolean putMaxTime(int maxTime) {
-        if(maxTime<0 || maxTime>60)
+        if(maxTime<1 || maxTime>60)
             return false;
         this.prefs.edit().putInt("maxTime", maxTime);
         return true;
