@@ -1,6 +1,13 @@
 package net.pando.androidswear;
 
+import android.app.Notification;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Vibrator;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,7 +18,6 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 
 import java.util.Random;
-
 
 public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChangeListener {
 
@@ -28,9 +34,9 @@ public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChan
     private CheckBox checkBoxSwearNegative;
     private CheckBox checkBoxSwearNeutral;
     private CheckBox checkBoxSwearPositive;
-    private Boolean motivationNegative;
-    private Boolean motivationNeutral;
-    private Boolean motivationPositive;
+    private Boolean swearNegative;
+    private Boolean swearNeutral;
+    private Boolean swearPositive;
 
     private String[] negative;
     private String[] neutral;
@@ -47,9 +53,9 @@ public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChan
         //get default/current values for persisted values
         minTime = prefStore.getMinTime();
         maxTime = prefStore.getMaxTime();
-        motivationNegative = prefStore.getNegative();
-        motivationNeutral  = prefStore.getNeutral();
-        motivationPositive = prefStore.getPositive();
+        swearNegative = prefStore.getNegative();
+        swearNeutral = prefStore.getNeutral();
+        swearPositive = prefStore.getPositive();
 
         editTextMinTime = (EditText) findViewById(R.id.editMinTime);
         editTextMinTime.setText(Integer.toString(minTime));
@@ -67,9 +73,9 @@ public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChan
         checkBoxSwearNeutral  = (CheckBox) findViewById(R.id.checkBoxSwearNeutral);
         checkBoxSwearPositive = (CheckBox) findViewById(R.id.checkBoxSwearPositive);
 
-        checkBoxSwearNegative.setChecked(motivationNegative);
-        checkBoxSwearNeutral.setChecked(motivationNeutral);
-        checkBoxSwearPositive.setChecked(motivationPositive);
+        checkBoxSwearNegative.setChecked(swearNegative);
+        checkBoxSwearNeutral.setChecked(swearNeutral);
+        checkBoxSwearPositive.setChecked(swearPositive);
 
         Resources res = getResources();
         negative = res.getStringArray(R.array.negative);
@@ -83,9 +89,9 @@ public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChan
         // save values to persistent storage
         prefStore.putMinTime(minTime);
         prefStore.putMaxTime(maxTime);
-        prefStore.putNegative(motivationNegative);
-        prefStore.putNeutral(motivationNeutral);
-        prefStore.putPositive(motivationPositive);
+        prefStore.putNegative(swearNegative);
+        prefStore.putNeutral(swearNeutral);
+        prefStore.putPositive(swearPositive);
         prefStore.commit();
     }
 
@@ -95,9 +101,9 @@ public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChan
         // reload values from persisted storage
         minTime = prefStore.getMinTime();
         maxTime = prefStore.getMaxTime();
-        motivationNegative = prefStore.getNegative();
-        motivationNeutral  = prefStore.getNeutral();
-        motivationPositive = prefStore.getPositive();
+        swearNegative = prefStore.getNegative();
+        swearNeutral = prefStore.getNeutral();
+        swearPositive = prefStore.getPositive();
     }
 
     @Override
@@ -151,15 +157,15 @@ public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChan
 
     public void onCheckBoxPressed(View view){
         if(view.equals(checkBoxSwearNegative))
-            motivationNegative = checkBoxSwearNegative.isChecked();
+            swearNegative = checkBoxSwearNegative.isChecked();
         if(view.equals(checkBoxSwearNeutral))
-            motivationNeutral = checkBoxSwearNeutral.isChecked();
+            swearNeutral = checkBoxSwearNeutral.isChecked();
         if(view.equals(checkBoxSwearPositive))
-            motivationPositive = checkBoxSwearPositive.isChecked();
+            swearPositive = checkBoxSwearPositive.isChecked();
     }
 
     public void sendSwear(View view) {
-        if(!motivationNegative && !motivationNeutral && !motivationPositive) {
+        if(!swearNegative && !swearNeutral && !swearPositive) {
             Resources res = getResources();
             SwearNotification.notify(this, res.getString(R.string.noTypeSelected), -1);
             return;
@@ -169,15 +175,15 @@ public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChan
         int category;
         while(true) { //loop is broken once a category is found
             category = rand.nextInt(3);
-            if(category == 0 && motivationNegative){
+            if(category == 0 && swearNegative){
                 SwearNotification.notify(this,negative[rand.nextInt(negative.length)], category);
                 break;
             }
-            if(category == 1 && motivationNeutral){
+            if(category == 1 && swearNeutral){
                 SwearNotification.notify(this,neutral[rand.nextInt(neutral.length)], category);
                 break;
             }
-            if(category == 2 && motivationPositive){
+            if(category == 2 && swearPositive){
                 SwearNotification.notify(this,positive[rand.nextInt(positive.length)], category);
                 break;
             }
@@ -185,6 +191,8 @@ public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChan
     }
 
     public void startService(View view){
-        // TODO
+        // start background service to send notifications again and again
+        Intent backgroundIntent = new Intent(getApplicationContext(), BackgroundNotificationService.class);
+        getApplicationContext().startService(backgroundIntent);
     }
 }

@@ -17,6 +17,10 @@
             </intent-filter>
         </activity>
 
+        <service
+            android:name=".BackgroundNotificationService"
+            android:exported="false" >
+        </service>
     </application>
 
     <uses-permission android:name="android.permission.VIBRATE" />
