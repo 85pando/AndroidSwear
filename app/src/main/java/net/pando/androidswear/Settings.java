@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.SeekBar;
@@ -22,6 +23,7 @@ import java.util.Random;
 public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChangeListener {
 
     private AppPrefStore prefStore;
+    private Intent backgroundIntent;
 
     private SeekBar seekBarMinTime;
     private EditText editTextMinTime;
@@ -37,6 +39,9 @@ public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChan
     private Boolean swearNegative;
     private Boolean swearNeutral;
     private Boolean swearPositive;
+
+    private Button buttonStopService;
+    private Button buttonStartService;
 
     private String[] negative;
     private String[] neutral;
@@ -72,10 +77,12 @@ public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChan
         checkBoxSwearNegative = (CheckBox) findViewById(R.id.checkBoxSwearNegative);
         checkBoxSwearNeutral  = (CheckBox) findViewById(R.id.checkBoxSwearNeutral);
         checkBoxSwearPositive = (CheckBox) findViewById(R.id.checkBoxSwearPositive);
-
         checkBoxSwearNegative.setChecked(swearNegative);
         checkBoxSwearNeutral.setChecked(swearNeutral);
         checkBoxSwearPositive.setChecked(swearPositive);
+
+        buttonStopService  = (Button) findViewById(R.id.buttonStopService);
+        buttonStartService = (Button) findViewById(R.id.buttonStartService);
 
         Resources res = getResources();
         negative = res.getStringArray(R.array.negative);
@@ -87,12 +94,7 @@ public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChan
     protected void onPause() {
         super.onPause();
         // save values to persistent storage
-        prefStore.putMinTime(minTime);
-        prefStore.putMaxTime(maxTime);
-        prefStore.putNegative(swearNegative);
-        prefStore.putNeutral(swearNeutral);
-        prefStore.putPositive(swearPositive);
-        prefStore.commit();
+        saveValues();
     }
 
     @Override
@@ -152,7 +154,18 @@ public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChan
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        saveValues();
+        seekBarMinTime.setProgress(minTime);
+        seekBarMaxTime.setProgress(maxTime);
+    }
 
+    public void saveValues() {
+        prefStore.putMinTime(minTime);
+        prefStore.putMaxTime(maxTime);
+        prefStore.putNegative(swearNegative);
+        prefStore.putNeutral(swearNeutral);
+        prefStore.putPositive(swearPositive);
+//        prefStore.commit();
     }
 
     public void onCheckBoxPressed(View view){
@@ -192,7 +205,21 @@ public class Settings extends ActionBarActivity implements SeekBar.OnSeekBarChan
 
     public void startService(View view){
         // start background service to send notifications again and again
-        Intent backgroundIntent = new Intent(getApplicationContext(), BackgroundNotificationService.class);
+        saveValues();
+        if (backgroundIntent != null){
+            getApplicationContext().stopService(backgroundIntent);
+        }
+        backgroundIntent = new Intent(getApplicationContext(), BackgroundNotificationService.class);
         getApplicationContext().startService(backgroundIntent);
+        buttonStopService.setEnabled(true);
+        buttonStartService.setEnabled(false);
+    }
+
+    public void stopService(View view){
+        if(backgroundIntent != null){
+            getApplicationContext().stopService(backgroundIntent);
+        }
+        buttonStopService.setEnabled(false);
+        buttonStartService.setEnabled(true);
     }
 }

@@ -43,5 +43,6 @@
     <string name="neutralSummary" >Message</string>
     <string name="positiveSummary">Keep Smiling</string>
     <string name="emptyPoolSummary">Don\'t use it like that.</string>
+    <string name="stopService">Stop Service</string>
 
 </resources>
