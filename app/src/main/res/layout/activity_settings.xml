@@ -56,7 +56,6 @@
     <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
         android:id="@+id/checkBoxSwearNegative"
         android:text="@string/swear_negative"
         android:onClick="onCheckBoxPressed"
@@ -71,7 +70,6 @@
     <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
         android:id="@+id/checkBoxSwearPositive"
         android:text="@string/swear_positive"
         android:onClick="onCheckBoxPressed"
@@ -91,7 +89,6 @@
             android:id="@+id/buttonStartService"
             android:onClick="startService"
             />
-
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -101,14 +98,13 @@
             android:onClick="stopService"
             android:enabled="false"
             />
-
-        <Button
+        <!--<Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/buttonSendMotivation"
             android:onClick="sendSwear"
-            />
+            />-->
         </LinearLayout>
     
     </LinearLayout>
